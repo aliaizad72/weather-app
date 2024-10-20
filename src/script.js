@@ -10656,9 +10656,29 @@ const londonReport = {
 };
 
 function print(weatherReport) {
-  appendTextToDump(weatherReport.address);
-  appendTextToDump(weatherReport.currentConditions.temp + "F");
-  appendTextToDump(getLocaleTime(weatherReport.timezone));
+  setAddress(weatherReport.address);
+  setIcon(weatherReport.currentConditions.icon);
+  appendTextToDump(
+    "Current temperature: " + weatherReport.currentConditions.temp + "F"
+  );
+  appendTextToDump(
+    "Feels like " + weatherReport.currentConditions.feelslike + "F"
+  );
+  appendTextToDump(
+    "Last updated: " +
+      removeSecondsFromDatetime(weatherReport.currentConditions.datetime)
+  );
+  appendTextToDump(
+    "Current conditions: " + weatherReport.currentConditions.conditions
+  );
+}
+
+function setAddress(location) {
+  document.getElementById("address").textContent = location.replace(",", ", ");
+}
+
+function setIcon(condition) {
+  document.getElementById("current-icon").src = `../icons/${condition}.svg`;
 }
 
 function appendTextToDump(str) {
@@ -10667,6 +10687,6 @@ function appendTextToDump(str) {
   dump.appendChild(div);
 }
 
-function getLocaleTime(timeZone) {
-  return new Date().toLocaleString("en-GB", { timeZone: timeZone });
+function removeSecondsFromDatetime(datetime) {
+  return datetime.slice(0, -3);
 }
