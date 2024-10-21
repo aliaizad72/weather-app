@@ -12,16 +12,29 @@ async function getWeather(location) {
   }
 }
 
+function latLongLocation(lat, lon) {
+  return lat + "%2C" + lon;
+}
+
 document.body.onload = () => {
-  getWeather("Kuala Lumpur").then((weather) => {
-    print(weather);
-  });
+  displayWeather("Kuala Lumpur");
 };
+
+function displayWeather(param) {
+  getWeather(param)
+    .then((weather) => {
+      print(weather);
+    })
+    .catch((error) => {
+      document.getElementById("error").textContent =
+        "Invalid search parameters, try again";
+    });
+}
 
 function print(weatherReport) {
   clearInfoDiv();
-  setAddress(weatherReport.address);
-  // addGif(weatherReport.currentConditions.icon);
+  setAddress(weatherReport.resolvedAddress);
+  addGif(weatherReport.currentConditions.icon);
   appendInfo(weatherReport.currentConditions.conditions);
   appendInfo(printTemp(weatherReport.currentConditions.temp));
   appendInfo(
@@ -42,7 +55,12 @@ function clearInfoDiv() {
 }
 
 function setAddress(location) {
-  document.getElementById("address").textContent = location.replace(",", ", ");
+  str = isCoords(location) ? "Your Location" : location.replace(",", ", ");
+  document.getElementById("address").textContent = str;
+}
+
+function isCoords(location) {
+  return Boolean(Number(location.split(",")[0]));
 }
 
 function setIcon(condition) {
@@ -86,11 +104,20 @@ function addGif(condition) {
   });
 }
 
-document.getElementById("searchbtn").addEventListener("click", searchLocation);
+document
+  .getElementById("searchbtn")
+  .addEventListener("click", () =>
+    displayWeather(document.getElementById("textinput").value)
+  );
 
-function searchLocation() {
-  const param = document.getElementById("textinput").value;
-  getWeather(param).then((weather) => {
-    print(weather);
+document
+  .getElementById("geolocater")
+  .addEventListener("click", getWeatherAtUserLocation);
+
+function getWeatherAtUserLocation() {
+  navigator.geolocation.getCurrentPosition((position) => {
+    displayWeather(
+      latLongLocation(position.coords.latitude, position.coords.longitude)
+    );
   });
 }
