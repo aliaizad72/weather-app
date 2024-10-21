@@ -3,20 +3,25 @@ function weatherURL(location) {
 }
 
 async function getWeather(location) {
-  const response = await fetch(weatherURL(location));
-  const json = await response.json();
-  return json;
+  try {
+    const response = await fetch(weatherURL(location));
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    throw error;
+  }
 }
 
 document.body.onload = () => {
-  getWeather("Jakarta").then((weather) => {
+  getWeather("Kuala Lumpur").then((weather) => {
     print(weather);
   });
 };
 
 function print(weatherReport) {
+  clearInfoDiv();
   setAddress(weatherReport.address);
-  addGif(weatherReport.currentConditions.icon);
+  // addGif(weatherReport.currentConditions.icon);
   appendInfo(weatherReport.currentConditions.conditions);
   appendInfo(printTemp(weatherReport.currentConditions.temp));
   appendInfo(
@@ -26,6 +31,14 @@ function print(weatherReport) {
     "Last updated: " +
       removeSecondsFromDatetime(weatherReport.currentConditions.datetime)
   );
+}
+
+function clearInfoDiv() {
+  const infoDiv = document.getElementById("info");
+  const infoDivDivChildren = [...infoDiv.children].filter(
+    (child) => child.localName === "div"
+  );
+  infoDivDivChildren.forEach((child) => child.remove());
 }
 
 function setAddress(location) {
@@ -70,5 +83,14 @@ function addGif(condition) {
   searchGif(condition).then((json) => {
     console.log(json.data.images.original.url);
     document.body.style.backgroundImage = `url(${json.data.images.original.url})`;
+  });
+}
+
+document.getElementById("searchbtn").addEventListener("click", searchLocation);
+
+function searchLocation() {
+  const param = document.getElementById("textinput").value;
+  getWeather(param).then((weather) => {
+    print(weather);
   });
 }

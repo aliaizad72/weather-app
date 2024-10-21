@@ -6,13 +6,16 @@
   <link href="./output.css" rel="stylesheet">
   <script src="script.js" defer></script>
 </head>
-<body class="p-2">
-  <div id="weather" class="flex justify-between border border-transparent rounded-md p-4 m-3 gap-4 bg-white">
+<body class="p-2 flex flex-col gap-3 m-3">
+  <div id="weather" class="flex justify-between border border-transparent rounded-md p-4 gap-4 bg-white">
     <div id="info">
       <h3 id="address" class="text-2xl font-medium"></h3>
     </div>
-    <img src="" alt="" id="gif" class="rounded-md w-3/5">
   </div>
-  <button id="geolocater" class="border border-gray-300 p-2 hover:bg-gray-300">use my location</button>
+  <div id="query" class="flex mx-auto border border-transparent rounded-md">
+    <input type="text" id="textinput" class="p-2 bg-gray-50 border border-gray-300">
+    <button id="searchbtn" class="border border-gray-300 p-2 hover:bg-gray-300 bg-white" >search</button>
+    <button id="geolocater" class="border border-gray-300 p-2 hover:bg-gray-300 bg-white">use my location</button>
+  </div>
 </body>
 </html>
